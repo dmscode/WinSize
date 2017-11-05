@@ -36,190 +36,223 @@ SizeWin(x,y,w,h)
     TW := w * (MonitorWorkAreaRight - MonitorWorkAreaLeft)/100 + 2 * k
     TH := h * (MonitorWorkAreaBottom - MonitorWorkAreaTop)/100 + 2 * k
     WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
-    Suspend , on
 }
-ReSizeWin(direction)
+ReSizeWin(direction,is_add)
 {
-    GetKeyState, Cdown, Control, P
-    if Cdown = D
-    {
-        WinGet, active_ID, ID, A
-        winID := GetMonitorNoOfWindow(active_ID)  ;获取当前显示器ID
-        SysGet, MonitorWorkArea, MonitorWorkArea, %winID%
-        k := 7 * (A_ScreenDPI/96)
-        Xadd := (MonitorWorkAreaRight - MonitorWorkAreaLeft)/20
-        Yadd := (MonitorWorkAreaBottom - MonitorWorkAreaTop)/20
-        WinGetPos, X, Y, W, H, ahk_id %active_ID%
-        if(direction == "l")
-        {
-            if(X >= MonitorWorkAreaLeft + Xadd){
-                TX := X - Xadd
-                TW := W + Xadd
-            }
-            else if(X <= MonitorWorkAreaLeft + (k+1) && X >= MonitorWorkAreaLeft - (k+1))
-            {
-                TX := MonitorWorkAreaLeft - k
-                TW := W + X - TX - Xadd
-            }
-            else
-            {
-                TX := MonitorWorkAreaLeft - k
-                TW := W + X - TX
-            }
-        }
-        else if(direction == "r")
-        {
-            if(MonitorWorkAreaRight - X - W + 2*(k+1) >= Xadd){
-                TW := W + Xadd
-            }
-            else if(X + W <= MonitorWorkAreaRight + 2*(k+1) && X + W >= MonitorWorkAreaRight - (k+1))
-            {
-                TX := X + Xadd
-                TW := MonitorWorkAreaRight - TX + 2*k
-            }
-            else
-            {
-                TW := MonitorWorkAreaRight - X + 2*k
-            }
-        }
-        else if(direction == "u")
-        {
-            if(Y >= MonitorWorkAreaTop + Yadd){
-                TY := Y - Yadd
-                TH := H + Yadd
-            }
-            else if(Y <= MonitorWorkAreaTop + (k+1) && Y >= MonitorWorkAreaTop - (k+1))
-            {
-                TY := MonitorWorkAreaTop - k
-                TH := H + Y - TY - Yadd
-            }
-            else
-            {
-                TY := MonitorWorkAreaTop - k
-                TH := H + Y - TY
-            }
-        }
-        else if(direction == "d")
-        {
-            if(MonitorWorkAreaBottom - Y - H + 2*(k+1) >= Yadd){
-                TH := H + Yadd
-            }
-            else if(Y + H <= MonitorWorkAreaBottom + 2*(k+1) && Y + H >= MonitorWorkAreaBottom - (k+1))
-            {
-                TY := Y + Yadd
-                TH := MonitorWorkAreaBottom - TY + 2*k
-            }
-            else
-            {
-                TH := MonitorWorkAreaBottom - Y + 2*k
-            }
-        }
-        WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
-    }
+	WinGet, active_ID, ID, A
+	winID := GetMonitorNoOfWindow(active_ID)  ;获取当前显示器ID
+	SysGet, MonitorWorkArea, MonitorWorkArea, %winID%
+	k := 8 * (A_ScreenDPI/96)
+	Xadd := (MonitorWorkAreaRight - MonitorWorkAreaLeft)/20
+	Yadd := (MonitorWorkAreaBottom - MonitorWorkAreaTop)/20
+	WinGetPos, X, Y, W, H, ahk_id %active_ID%
+	TX := X
+	TY := Y
+	TW := W
+	TH := H
+	if(direction == "t"){
+		if(is_add){
+			if(Y-MonitorWorkAreaTop+k>=Yadd){
+				TY := Y-Yadd
+				TH := H+Yadd
+			}else{
+				TY := MonitorWorkAreaTop-k
+				TH := H+Y-MonitorWorkAreaTop+k
+			}
+		}else{
+			if(H>=3*Yadd+2*k){
+				TY := Y+Yadd
+				TH := H-Yadd
+			}
+		}
+	}else if(direction == "l"){
+		if(is_add){
+			if(X-MonitorWorkAreaLeft+k>=Xadd){
+				TX := X-Xadd
+				TW := TW+Xadd
+			}else{
+				TX := MonitorWorkAreaLeft-k
+				TW := W+X-MonitorWorkAreaLeft+k
+			}
+		}else{
+			if(W>=3*Xadd+2*k){
+				TX := X+Xadd
+				TW := W-Xadd
+			}
+		}
+	}else if(direction == "r"){
+		if(is_add){
+			if(MonitorWorkAreaRight+k-X-W>=Xadd){
+				TW := TW+Xadd
+			}else{
+				TW := MonitorWorkAreaRight+k-X
+			}
+		}else{
+			if(W>=3*Xadd+2*k){
+				TW := W-Xadd
+			}
+		}
+	}else if(direction == "b"){
+		if(is_add){
+			if(MonitorWorkAreaBottom+k-Y-H>=Yadd){
+				TH := H+Yadd
+			}else{
+				TH := MonitorWorkAreaBottom+k-Y
+			}
+		}else{
+			if(H>=3*Yadd+2*k){
+				TH := H-Yadd
+			}
+		}
+	}
+
+	WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
 }
-Alt & LWin::
+LAlt & Numpad0::
+LAlt & NumpadIns::
+RAlt & \::
     Suspend
     ;  Mode := 0
     return
-Esc::
+*Esc::
     Suspend, on
     return
 
 ; TL
+Numpad7::
+NumpadHome::
 q::
     SizeWin(0, 0, 50, 50)
     return
 ; TC
+Numpad8::
+NumpadUp::
 w::
     SizeWin(0, 0, 100, 50)
     return
 ; TR
+Numpad9::
+NumpadPgUp::
 e::
     SizeWin(50, 0, 50, 50)
     return
 
 ; CL
+Numpad4::
+NumpadLeft::
 a::
     SizeWin(0, 0, 50, 100)
     return
 ; CC
+Numpad5::
+NumpadClear::
 s::
     SizeWin(8, 8, 84, 84)
     return
 ; CR
+Numpad6::
+NumpadRight::
 d::
     SizeWin(50, 0, 50, 100)
     return
 
 ; BL
+Numpad1::
+NumpadEnd::
 z::
     SizeWin(0, 50, 50, 50)
     return
 ; BC
+Numpad2::
+NumpadDown::
 x::
     SizeWin(0, 50, 100, 50)
     return
 ; BR
+Numpad3::
+NumpadPgDn::
 c::
     SizeWin(50, 50, 50, 50)
     return
 
+^Numpad1::
+^NumpadEnd::
 1::
     SizeWin(45, 45, 10, 10)
     return
+^Numpad2::
+^NumpadDown::
 2::
     SizeWin(40, 40, 20, 20)
     return
+^Numpad3::
+^NumpadPgDn::
 3::
     SizeWin(35, 35, 30, 30)
     return
+^Numpad4::
+^NumpadLeft::
 4::
     SizeWin(30, 30, 40 ,40)
     return
+^Numpad5::
+^NumpadClear::
 5::
     SizeWin(25, 25, 50, 50)
     return
+^Numpad6::
+^NumpadRight::
 6::
     SizeWin(20, 20, 60, 60)
     return
+^Numpad7::
+^NumpadHome::
 7::
     SizeWin(15, 15, 70, 70)
     return
+^Numpad8::
+^NumpadUp::
 8::
     SizeWin(10, 10, 80, 80)
     return
+^Numpad9::
+^NumpadPgUp::
 9::
     SizeWin(5, 5, 90, 90)
     return
-0::
-    SizeWin(0, 0, 100, 100)
-    WinMaximize, A
-    Suspend , on
-    return
+^NumpadSub::
 -::
-    WinMinimize, A
-    Suspend , on
-    return
-t::
     WinSet, Style, ^0xC00000, A
-    Suspend , on
     return
-p::
+^NumpadAdd::
+=::
     WinSet, AlwaysOnTop, toggle, A
-    Suspend , on
     return
-u::
-    ReSizeWin("u")
+
+w & WheelUp::
+    ReSizeWin("t",True)
     return
-j::
-    ReSizeWin("d")
+w & WheelDown::
+    ReSizeWin("t",False)
     return
-h::
-    ReSizeWin("l")
+
+a & WheelUp::
+    ReSizeWin("l",True)
     return
-k::
-    ReSizeWin("r")
+a & WheelDown::
+    ReSizeWin("l",False)
     return
-*Control UP::
-    Suspend, on
+
+d & WheelUp::
+    ReSizeWin("r",True)
+    return
+d & WheelDown::
+    ReSizeWin("r",False)
+    return
+
+x & WheelUp::
+    ReSizeWin("b",True)
+    return
+x & WheelDown::
+    ReSizeWin("b",False)
     return
