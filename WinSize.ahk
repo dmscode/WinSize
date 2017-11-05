@@ -1,4 +1,4 @@
-Suspend , on
+﻿Suspend , on
 GetMonitorNoOfWindow(active_ID)
 {
 	;Get Center point of The Window
@@ -112,7 +112,6 @@ LAlt & Numpad0::
 LAlt & NumpadIns::
 RAlt & \::
     Suspend
-    ;  Mode := 0
     return
 *Esc::
     Suspend, on
