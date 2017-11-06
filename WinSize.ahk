@@ -25,96 +25,106 @@ GetMonitorNoOfWindow(active_ID)
 }
 SizeWin(x,y,w,h)
 {
-    WinGet, active_ID, ID, A
-    WinRestore, ahk_id %active_ID%
-    ;  WinMaximize, ahk_id %active_ID%
-    winID := GetMonitorNoOfWindow(active_ID)  ;获取当前显示器ID
-    SysGet, MonitorWorkArea, MonitorWorkArea, %winID%
-    k := 8 * (A_ScreenDPI/96)
-    TX := MonitorWorkAreaLeft + x * (MonitorWorkAreaRight - MonitorWorkAreaLeft)/100 - k
-    TY := MonitorWorkAreaTop + y * (MonitorWorkAreaBottom - MonitorWorkAreaTop)/100 - K
-    TW := w * (MonitorWorkAreaRight - MonitorWorkAreaLeft)/100 + 2 * k
-    TH := h * (MonitorWorkAreaBottom - MonitorWorkAreaTop)/100 + 2 * k
-    WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
+	if(!GetKeyState("LAlt")){
+		WinGet, active_ID, ID, A
+		WinRestore, ahk_id %active_ID%
+		;  WinMaximize, ahk_id %active_ID%
+		winID := GetMonitorNoOfWindow(active_ID)  ;获取当前显示器ID
+		SysGet, MonitorWorkArea, MonitorWorkArea, %winID%
+		k := 8 * (A_ScreenDPI/96)
+		TX := MonitorWorkAreaLeft + x * (MonitorWorkAreaRight - MonitorWorkAreaLeft)/100 - k
+		TY := MonitorWorkAreaTop + y * (MonitorWorkAreaBottom - MonitorWorkAreaTop)/100 - K
+		TW := w * (MonitorWorkAreaRight - MonitorWorkAreaLeft)/100 + 2 * k
+		TH := h * (MonitorWorkAreaBottom - MonitorWorkAreaTop)/100 + 2 * k
+		WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
+	}
 }
 ReSizeWin(direction,is_add)
 {
-	WinGet, active_ID, ID, A
-	winID := GetMonitorNoOfWindow(active_ID)  ;获取当前显示器ID
-	SysGet, MonitorWorkArea, MonitorWorkArea, %winID%
-	k := 8 * (A_ScreenDPI/96)
-	Xadd := (MonitorWorkAreaRight - MonitorWorkAreaLeft)/20
-	Yadd := (MonitorWorkAreaBottom - MonitorWorkAreaTop)/20
-	WinGetPos, X, Y, W, H, ahk_id %active_ID%
-	TX := X
-	TY := Y
-	TW := W
-	TH := H
-	if(direction == "t"){
-		if(is_add){
-			if(Y-MonitorWorkAreaTop+k>=Yadd){
-				TY := Y-Yadd
-				TH := H+Yadd
+	if(GetKeyState("LAlt")){
+		WinGet, active_ID, ID, A
+		winID := GetMonitorNoOfWindow(active_ID)  ;获取当前显示器ID
+		SysGet, MonitorWorkArea, MonitorWorkArea, %winID%
+		k := 8 * (A_ScreenDPI/96)
+		Xadd := (MonitorWorkAreaRight - MonitorWorkAreaLeft)/20
+		Yadd := (MonitorWorkAreaBottom - MonitorWorkAreaTop)/20
+		WinGetPos, X, Y, W, H, ahk_id %active_ID%
+		TX := X
+		TY := Y
+		TW := W
+		TH := H
+		if(direction == "t"){
+			if(is_add){
+				if(Y-MonitorWorkAreaTop+k>=Yadd){
+					TY := Y-Yadd
+					TH := H+Yadd
+				}else{
+					TY := MonitorWorkAreaTop-k
+					TH := H+Y-MonitorWorkAreaTop+k
+				}
 			}else{
-				TY := MonitorWorkAreaTop-k
-				TH := H+Y-MonitorWorkAreaTop+k
+				if(H>=3*Yadd+2*k){
+					TY := Y+Yadd
+					TH := H-Yadd
+				}
 			}
-		}else{
-			if(H>=3*Yadd+2*k){
-				TY := Y+Yadd
-				TH := H-Yadd
+		}else if(direction == "l"){
+			if(is_add){
+				if(X-MonitorWorkAreaLeft+k>=Xadd){
+					TX := X-Xadd
+					TW := TW+Xadd
+				}else{
+					TX := MonitorWorkAreaLeft-k
+					TW := W+X-MonitorWorkAreaLeft+k
+				}
+			}else{
+				if(W>=3*Xadd+2*k){
+					TX := X+Xadd
+					TW := W-Xadd
+				}
+			}
+		}else if(direction == "r"){
+			if(is_add){
+				if(MonitorWorkAreaRight+k-X-W>=Xadd){
+					TW := TW+Xadd
+				}else{
+					TW := MonitorWorkAreaRight+k-X
+				}
+			}else{
+				if(W>=3*Xadd+2*k){
+					TW := W-Xadd
+				}
+			}
+		}else if(direction == "b"){
+			if(is_add){
+				if(MonitorWorkAreaBottom+k-Y-H>=Yadd){
+					TH := H+Yadd
+				}else{
+					TH := MonitorWorkAreaBottom+k-Y
+				}
+			}else{
+				if(H>=3*Yadd+2*k){
+					TH := H-Yadd
+				}
 			}
 		}
-	}else if(direction == "l"){
-		if(is_add){
-			if(X-MonitorWorkAreaLeft+k>=Xadd){
-				TX := X-Xadd
-				TW := TW+Xadd
-			}else{
-				TX := MonitorWorkAreaLeft-k
-				TW := W+X-MonitorWorkAreaLeft+k
-			}
-		}else{
-			if(W>=3*Xadd+2*k){
-				TX := X+Xadd
-				TW := W-Xadd
-			}
-		}
-	}else if(direction == "r"){
-		if(is_add){
-			if(MonitorWorkAreaRight+k-X-W>=Xadd){
-				TW := TW+Xadd
-			}else{
-				TW := MonitorWorkAreaRight+k-X
-			}
-		}else{
-			if(W>=3*Xadd+2*k){
-				TW := W-Xadd
-			}
-		}
-	}else if(direction == "b"){
-		if(is_add){
-			if(MonitorWorkAreaBottom+k-Y-H>=Yadd){
-				TH := H+Yadd
-			}else{
-				TH := MonitorWorkAreaBottom+k-Y
-			}
-		}else{
-			if(H>=3*Yadd+2*k){
-				TH := H-Yadd
-			}
-		}
-	}
 
-	WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
+		WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
+	}
 }
 LAlt & Numpad0::
 LAlt & NumpadIns::
 RAlt & \::
     Suspend
+	if(A_IsSuspended){
+		SetCapsLockState, Off
+	}else{
+		SetCapsLockState, AlwaysOn
+	}
     return
 *Esc::
     Suspend, on
+	SetCapsLockState, Off
     return
 
 ; TL
