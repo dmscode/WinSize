@@ -45,14 +45,14 @@ ReSizeWin(direction,is_add)
 		WinGet, active_ID, ID, A
 		winID := GetMonitorNoOfWindow(active_ID)  ;获取当前显示器ID
 		SysGet, MonitorWorkArea, MonitorWorkArea, %winID%
-		k := 8 * (A_ScreenDPI/96)
-		Xadd := (MonitorWorkAreaRight - MonitorWorkAreaLeft)/20
-		Yadd := (MonitorWorkAreaBottom - MonitorWorkAreaTop)/20
 		WinGetPos, X, Y, W, H, ahk_id %active_ID%
 		TX := X
 		TY := Y
 		TW := W
 		TH := H
+		k := 8 * (A_ScreenDPI/96)
+		Xadd := (MonitorWorkAreaRight - MonitorWorkAreaLeft)/20
+		Yadd := (MonitorWorkAreaBottom - MonitorWorkAreaTop)/20
 		if(direction == "t"){
 			if(is_add){
 				if(Y-MonitorWorkAreaTop+k>=Yadd){
@@ -72,7 +72,7 @@ ReSizeWin(direction,is_add)
 			if(is_add){
 				if(X-MonitorWorkAreaLeft+k>=Xadd){
 					TX := X-Xadd
-					TW := TW+Xadd
+					TW := W+Xadd
 				}else{
 					TX := MonitorWorkAreaLeft-k
 					TW := W+X-MonitorWorkAreaLeft+k
@@ -86,7 +86,7 @@ ReSizeWin(direction,is_add)
 		}else if(direction == "r"){
 			if(is_add){
 				if(MonitorWorkAreaRight+k-X-W>=Xadd){
-					TW := TW+Xadd
+					TW := W+Xadd
 				}else{
 					TW := MonitorWorkAreaRight+k-X
 				}
@@ -108,7 +108,6 @@ ReSizeWin(direction,is_add)
 				}
 			}
 		}
-
 		WinMove, ahk_id %active_ID%, , %TX%, %TY%, %TW%, %TH%
 	}
 }
@@ -265,3 +264,28 @@ x & WheelUp::
 x & WheelDown::
     ReSizeWin("b",False)
     return
+
+; 窗口裁剪，但是兼容性太差
+; LAlt & RButton::
+; 	MouseGetPos, msx, msy, mactive_ID
+; 	return
+; LAlt & RButton Up::
+; 	MouseGetPos, mex, mey
+; 	WinGetPos, X, Y, W, H, ahk_id %mactive_ID%
+; 	sx := (msx<mex?msx:mex)>X?(msx<mex?msx:mex):X
+; 	sy := (msy<mey?msy:mey)>Y?(msy<mey?msy:mey):Y
+; 	ex := (msx>mex?msx:mex)<X+W?(msx>mex?msx:mex):X+W
+; 	ey := (msy>mey?msy:mey)<Y+H?(msy>mey?msy:mey):Y+H
+
+; 	if(sx<ex-50 && sy<ey-50){
+; 		rw := ex-sx
+; 		rh := ey-sy
+; 		rx := sx-X
+; 		ry := sy-Y
+; 		WinSet, Style, -0xC00000 -0x800000, ahk_id %mactive_ID%
+; 		WinSet, Region, w%rw% h%rh% %sx%-%sy%, ahk_id %mactive_ID%
+; 	}else{
+; 		WinSet, Style, +0xC00000 +0x800000, ahk_id %mactive_ID%
+; 		WinSet, Region, , ahk_id %mactive_ID%
+; 	}
+; 	return
