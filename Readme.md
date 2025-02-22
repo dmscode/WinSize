@@ -9,7 +9,7 @@ WinSize 是一个用来快速将程序窗口定位到预设位置和大小的工
 
 ## 程序获取
 
-你可以在此处获得本程序：https://afdian.net/item/d8fea58cb99c11eebcb75254001e7c00
+你可以在此处获得本程序：https://afdian.com/item/d8fea58cb99c11eebcb75254001e7c00
 
 WinSize 是绿色版程序，仅在 Win11 x64 位系统下测试通过。
 
