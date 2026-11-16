@@ -212,12 +212,24 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
 .showcase p { margin-top: 14px; color: var(--body); font-size: 16px; }
 .showcase .muted { color: var(--mute); font-size: 14px; }
 
-.players { display: flex; gap: 18px; align-items: flex-end; justify-content: center; }
-.players video {
-  width: 100%; border-radius: 10px; background: #000;
+/* 只放一个视频：横窗口给横版，竖窗口给竖版。
+   原先两个并排（100% + 34%）宽度加起来超过网格列，溢出压到左边文字上。
+   min-width: 0 是防 flex/grid 子项按内容撑宽的老问题。 */
+.player { display: flex; justify-content: center; min-width: 0; }
+.player video {
+  width: 100%; height: auto; border-radius: 10px; background: #000;
   border: 2px solid var(--edge);
 }
-.players video.tall { width: 34%; }
+.player .tall { display: none; }
+
+/* 窗口比 1:1 还窄（手机竖屏、窄分屏）→ 换竖版。
+   用 aspect-ratio 而不是宽度断点：要判断的是"窗口是竖的"，不是"窗口有多窄"。 */
+@media (max-aspect-ratio: 1/1) {
+  .player .wide { display: none; }
+  /* 高度要封顶：竖版在"宽但高"的窗口里（如把浏览器拉成 1440×2000）会高得压过整页。
+     68vh 管手机，640px 管桌面高窗口，取小者。 */
+  .player .tall { display: block; width: auto; max-width: 100%; max-height: min(68vh, 640px); }
+}
 
 /* ---------------------------------------------------------------- 页脚 */
 
@@ -239,8 +251,7 @@ footer {
   .features { grid-template-columns: 1fr; gap: 16px; padding-bottom: 72px; }
   .doc-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 28px; }
   .showcase { grid-template-columns: 1fr; gap: 32px; }
-  .players video { width: 62%; }
-  .players video.tall { width: 30%; }
+  .player video { max-width: 620px; }
 }
 
 @media (max-width: 600px) {
@@ -250,8 +261,13 @@ footer {
   main { padding: 0 20px; }
   .hero h1 { font-size: 32px; }
   .lead { font-size: 16px; }
-  .pad { width: 160px; }
-  .screen { width: 196px; }
+  /* 手机竖屏只有 ~350px 可用宽，键盘(160) + 箭头 + 屏幕(196) 装不下，
+     会把整列撑宽导致横向滚动（390 宽实测溢出 52px）。按比例缩一档。 */
+  .hero-demo { gap: 10px; }
+  .pad { width: 132px; }
+  .pad span { font-size: 14px; border-width: 1.5px; border-radius: 8px; }
+  .link { font-size: 18px; }
+  .screen { width: 168px; }
   .doc-grid { grid-template-columns: 1fr; }
   .foot-inner { flex-direction: column; gap: 8px; }
 }

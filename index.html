@@ -72,6 +72,20 @@
     </article>
   </section>
 
+  <!-- 一段演示：横竖两版只放一个，按窗口宽高比二选一（见 site.css 的 aspect-ratio 断点）。
+       两个都放进 DOM 但只显示一个：preload="none" 时未播放的那个不会发请求。 -->
+  <section class="showcase">
+    <div class="showcase-text">
+      <h2>看不明白就放一遍</h2>
+      <p>100 秒，从"一个托盘图标"讲到"交给 AI"，只回答一个问题：这工具从哪儿开始用。</p>
+      <p class="muted">横屏看横版，竖屏看竖版——竖版按手机的阅读顺序重排过，不是把横屏压扁的。</p>
+    </div>
+    <div class="player">
+      <video class="wide" src="./videos/winsize-6.0.mp4" poster="./assets/poster-wide.jpg" controls preload="none" playsinline></video>
+      <video class="tall" src="./videos/winsize-6.0-tall.mp4" poster="./assets/poster-tall.jpg" controls preload="none" playsinline></video>
+    </div>
+  </section>
+
   <!-- 帮助目录：与 help/README.md 的五组一致 -->
   <section class="docs">
     <div class="docs-head">
@@ -109,19 +123,6 @@
         <a href="./help/#/15-配置文件">15 配置文件</a>
         <a href="./help/#/16-第三方调用">16 第三方调用</a>
       </div>
-    </div>
-  </section>
-
-  <!-- 一段演示：竖版视频更适合在窄屏里播放 -->
-  <section class="showcase">
-    <div class="showcase-text">
-      <h2>看不明白就放一遍</h2>
-      <p>100 秒，从"一个托盘图标"讲到"交给 AI"，只回答一个问题：这工具从哪儿开始用。</p>
-      <p class="muted">建议先看竖版——它按手机的阅读顺序重排过，不是横屏压扁的。</p>
-    </div>
-    <div class="players">
-      <video src="./videos/winsize-6.0.mp4" poster="./assets/poster-wide.jpg" controls preload="none" playsinline></video>
-      <video class="tall" src="./videos/winsize-6.0-tall.mp4" poster="./assets/poster-tall.jpg" controls preload="none" playsinline></video>
     </div>
   </section>
 
