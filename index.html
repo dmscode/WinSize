@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WinSize — 双击左 Alt，窗口就到你要的位置</title>
+<meta name="description" content="WinSize 是一个 Windows 窗口布局工具：双击左 Alt 进入等待态，按一个字母把当前窗口摆到预设位置。">
+<link rel="stylesheet" href="./assets/site.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="./">
+    <span class="mark">W</span>
+    <span class="name">WinSize</span>
+  </a>
+  <nav>
+    <a href="./help/">帮助</a>
+    <a href="https://github.com/dmscode/WinSize" target="_blank" rel="noopener">GitHub</a>
+    <a class="get" href="https://afdian.com/item/d8fea58cb99c11eebcb75254001e7c00" target="_blank" rel="noopener">获取程序</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- hero：一句话 + 键盘与屏幕的对应关系（这也是产品本身的结构） -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">Windows 11 x64 · 绿色版 · 常驻托盘</p>
+      <h1>双击左 <kbd>Alt</kbd><br>窗口就到你要的位置</h1>
+      <p class="lead">
+        按 <code>Q</code> 到左上，<code>S</code> 到居中，<code>C</code> 到右下。
+        键位的样子，就是窗口的样子——不用记口诀。
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="./help/">查看帮助</a>
+        <a class="btn" href="https://afdian.com/item/d8fea58cb99c11eebcb75254001e7c00" target="_blank" rel="noopener">获取程序</a>
+      </div>
+    </div>
+
+    <div class="hero-demo" aria-hidden="true">
+      <div class="pad">
+        <span>Q</span><span>W</span><span>E</span>
+        <span>A</span><span class="on">S</span><span>D</span>
+        <span>Z</span><span>X</span><span>C</span>
+      </div>
+      <div class="link" aria-hidden="true">→</div>
+      <div class="screen">
+        <span></span><span></span><span></span>
+        <span></span><span class="on"></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 三个卖点：只讲"和别的窗口工具不一样"的地方 -->
+  <section class="features">
+    <article>
+      <h3>形状即键位</h3>
+      <p><code>Q W E / A S D / Z X C</code> 与九宫格同形，按哪个键，窗口就去哪个方位。九个键用完不用背。</p>
+    </article>
+    <article>
+      <h3>一个入口，其余都是分支</h3>
+      <p>所有功能都发生在"按下 Alt 之后"的那几秒：字母摆窗口、数字存书签、<code>P</code> 置顶、<code>G</code> 辅助线。</p>
+    </article>
+    <article>
+      <h3>可以被脚本指挥</h3>
+      <p>内置本地 HTTP 接口，AI 或脚本一句话就能摆好一整套桌面。接口只监听本机回环，不联网。</p>
+    </article>
+  </section>
+
+  <!-- 帮助目录：与 help/README.md 的五组一致 -->
+  <section class="docs">
+    <div class="docs-head">
+      <h2>帮助文档</h2>
+      <p>按"第一次用 → 调顺手 → 改配置"的顺序排的。找不到答案先看 <a href="./help/#/17-常见问题">常见问题</a>。</p>
+    </div>
+
+    <div class="doc-grid">
+      <div class="doc-col">
+        <h4>入门</h4>
+        <a href="./help/#/01-安装与启动">01 安装与启动</a>
+        <a href="./help/#/02-基本用法">02 基本用法</a>
+        <a href="./help/#/17-常见问题">17 常见问题</a>
+      </div>
+      <div class="doc-col">
+        <h4>布局</h4>
+        <a href="./help/#/03-布局方案">03 布局方案</a>
+        <a href="./help/#/04-鼠标手势">04 鼠标手势</a>
+        <a href="./help/#/05-按键绑定">05 按键绑定</a>
+        <a href="./help/#/06-冒号指令">06 冒号指令</a>
+      </div>
+      <div class="doc-col">
+        <h4>功能</h4>
+        <a href="./help/#/07-窗口排除">07 窗口排除</a>
+        <a href="./help/#/08-窗口置顶">08 窗口置顶</a>
+        <a href="./help/#/09-窗口绑定">09 窗口绑定</a>
+        <a href="./help/#/10-辅助线">10 辅助线</a>
+        <a href="./help/#/11-悬停激活">11 悬停激活</a>
+        <a href="./help/#/12-大写提示">12 大写提示</a>
+      </div>
+      <div class="doc-col">
+        <h4>配置 · 进阶</h4>
+        <a href="./help/#/13-托盘菜单">13 托盘菜单</a>
+        <a href="./help/#/14-设置页">14 设置页</a>
+        <a href="./help/#/15-配置文件">15 配置文件</a>
+        <a href="./help/#/16-第三方调用">16 第三方调用</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 一段演示：竖版视频更适合在窄屏里播放 -->
+  <section class="showcase">
+    <div class="showcase-text">
+      <h2>看不明白就放一遍</h2>
+      <p>100 秒，从"一个托盘图标"讲到"交给 AI"，只回答一个问题：这工具从哪儿开始用。</p>
+      <p class="muted">建议先看竖版——它按手机的阅读顺序重排过，不是横屏压扁的。</p>
+    </div>
+    <div class="players">
+      <video src="./videos/winsize-6.0.mp4" poster="./assets/poster-wide.jpg" controls preload="none" playsinline></video>
+      <video class="tall" src="./videos/winsize-6.0-tall.mp4" poster="./assets/poster-tall.jpg" controls preload="none" playsinline></video>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <p>WinSize 6.0 · 仅在 Windows 11 x64 完整验证 · 绿色版，删掉文件夹就是卸载</p>
+    <p><a href="https://afdian.com/item/d8fea58cb99c11eebcb75254001e7c00" target="_blank" rel="noopener">爱发电</a> · <a href="https://github.com/dmscode/WinSize" target="_blank" rel="noopener">GitHub</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

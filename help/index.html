@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WinSize 帮助</title>
+<meta name="description" content="WinSize 使用帮助：安装、布局、鼠标手势、按键绑定、配置与第三方调用。">
+<link rel="stylesheet" href="../assets/vue.css">
+<style>
+  /* 只覆盖必要的几处：字体、主色、侧边栏宽度。其余交给 docsify 的 vue 主题 */
+  :root {
+    --theme-color: #2F6BF6;
+    --sidebar-width: 17rem;
+  }
+  body {
+    font-family: "Segoe UI", "Microsoft YaHei", -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sidebar { padding-top: 24px; }
+  .sidebar .app-name-link { font-weight: 700; letter-spacing: .5px; }
+  .sidebar-nav { line-height: 1.9; }
+  .markdown-section { max-width: 920px; padding: 28px 44px 80px; }
+  .markdown-section h1, .markdown-section h2, .markdown-section h3 { font-weight: 700; }
+  .markdown-section code { background: #E8EFFF; color: #1F4FD0; }
+  .markdown-section table th { background: #F6F9FE; }
+  /* 顶部那条进度条与侧边栏开关在浅色下太淡 */
+  .progress { background-color: #2F6BF6 !important; }
+  /* 返回官网放在 #app 外面：docsify 会接管 .sidebar-nav 里的所有链接，
+     `../` 这种不带 .md 的相对地址会被当成文档路由而不是跳转。
+     普通 <a> 写在挂载点之外，就不经过渲染器，行为可预期。 */
+  .back-home {
+    position: fixed; right: 22px; top: 16px; z-index: 30;
+    padding: 7px 14px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    color: #4A5D7A; background: #FFFFFF;
+    box-shadow: 0 0 0 1px #E2E9F3, 0 4px 12px rgba(31, 58, 120, .08);
+    transition: color .15s, box-shadow .15s;
+  }
+  .back-home:hover { color: #2F6BF6; box-shadow: 0 0 0 1px #C9DAF6, 0 6px 16px rgba(47, 107, 246, .14); }
+</style>
+</head>
+<body>
+
+<a class="back-home" href="../">← 返回官网</a>
+<div id="app">加载中…</div>
+
+<script>
+  window.$docsify = {
+    name: 'WinSize 帮助',
+    loadSidebar: true,
+    subMaxLevel: 2,
+    maxLevel: 3,
+    homepage: 'README.md',
+    // 目录不存在时的兜底，避免点了旧链接看到一片空白
+    notFoundPage: { _: '没有这一页。回到 [帮助目录](README.md)，或从左侧挑一篇。' },
+    search: {
+      placeholder: '搜索文档…',
+      noData: '没有找到相关内容',
+      depth: 3,
+    },
+  }
+</script>
+
+<script src="../assets/docsify.min.js"></script>
+<script src="../assets/search.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+/* ------------------------------------------------------------------
+   WinSize 官网页样式
+   配色与说明图、宣传片同源（浅色精密风）：白底、蓝色主色、黄色只用于
+   "当前动作"。不做粒子、不做发光——浅色底的科技感来自对齐与留白。
+   ------------------------------------------------------------------ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #16181D;
+  --body: #5B636E;
+  --mute: #9AA2AC;
+  --faint: #C9D2DF;
+  --line: #E3E9F2;
+  --brand: #2F6BF6;
+  --brand-deep: #1F4FD0;
+  --brand-soft: #E8EFFF;
+  --accent: #FFC24B;
+  --edge: #2E3440;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Segoe UI", "Microsoft YaHei", -apple-system, sans-serif;
+  color: var(--ink);
+  background: #FFFFFF;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+a { color: var(--brand); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+code, kbd, .mono { font-family: Consolas, "SF Mono", monospace; }
+
+code {
+  background: var(--brand-soft); color: var(--brand-deep);
+  padding: 1px 6px; border-radius: 4px; font-size: 0.92em;
+}
+
+kbd {
+  display: inline-block; padding: 2px 10px; border-radius: 7px;
+  border: 2px solid var(--brand); background: #FFFFFF; color: var(--brand);
+  font-size: 0.78em; font-weight: 700; line-height: 1.5;
+  box-shadow: 0 3px 0 var(--brand-soft);
+}
+
+/* ---------------------------------------------------------------- 顶栏 */
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1120px; margin: 0 auto; padding: 18px 28px;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid transparent;
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); }
+.topbar .brand:hover { text-decoration: none; }
+.topbar .mark {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: linear-gradient(150deg, #4C81FF, var(--brand) 50%, var(--brand-deep));
+  color: #FFF; font-weight: 700; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+.topbar .name { font-weight: 700; letter-spacing: 0.5px; }
+
+.topbar nav { display: flex; align-items: center; gap: 26px; font-size: 15px; }
+.topbar nav a { color: var(--body); }
+.topbar nav a:hover { color: var(--ink); text-decoration: none; }
+.topbar nav .get {
+  padding: 7px 16px; border-radius: 8px; background: var(--ink); color: #FFF;
+}
+.topbar nav .get:hover { background: #000; }
+
+/* ---------------------------------------------------------------- 通用 */
+
+main { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 26px; border-radius: 10px; font-size: 16px; font-weight: 600;
+  border: 1.5px solid var(--line); color: var(--ink); background: #FFF;
+  transition: border-color .18s, transform .18s;
+}
+.btn:hover { text-decoration: none; border-color: var(--faint); }
+.btn.primary {
+  background: var(--brand); border-color: var(--brand); color: #FFF;
+  box-shadow: 0 8px 22px rgba(47, 107, 246, 0.26);
+}
+.btn.primary:hover { background: var(--brand-deep); border-color: var(--brand-deep); }
+
+/* ---------------------------------------------------------------- hero */
+
+.hero {
+  display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px;
+  align-items: center; padding: 76px 0 96px;
+}
+
+.eyebrow {
+  font: 600 13px/1 Consolas, monospace; letter-spacing: 2px;
+  color: var(--mute); text-transform: uppercase; margin-bottom: 22px;
+}
+
+.hero h1 {
+  font-size: 52px; line-height: 1.22; letter-spacing: -0.5px;
+  font-weight: 700;
+}
+.hero h1 kbd {
+  font-size: 0.62em; padding: 4px 12px; vertical-align: 6px;
+  box-shadow: 0 4px 0 var(--brand-soft);
+}
+
+.lead {
+  margin-top: 22px; font-size: 17px; color: var(--body); max-width: 30em;
+}
+.lead code { font-size: 15px; }
+
+.actions { margin-top: 34px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* 键盘与屏幕的对应：这一块就是产品结构本身，不放装饰图 */
+.hero-demo {
+  display: flex; align-items: center; justify-content: center; gap: 22px;
+}
+
+.pad, .screen {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.pad { width: 204px; }
+.pad span {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  background: #FFF; border: 2px solid var(--line); border-radius: 10px;
+  font: 700 17px/1 Consolas, monospace; color: var(--body);
+  box-shadow: 0 3px 0 #EEF2F8;
+}
+.pad span.on {
+  background: var(--brand-soft); border-color: var(--brand); color: var(--brand);
+  box-shadow: 0 2px 0 rgba(47, 107, 246, 0.18);
+}
+
+/* 中间不用三根线：并排两个九宫格已经能看出"同形"，一个箭头足够，
+   线多了反而像接线图 */
+.link {
+  font-size: 26px; line-height: 1; color: var(--faint);
+  font-weight: 300; user-select: none;
+}
+
+.screen {
+  width: 256px; aspect-ratio: 16 / 10;
+  grid-template-rows: repeat(3, 1fr); gap: 0;
+  border: 2px solid var(--edge); border-radius: 10px; overflow: hidden;
+  background: #FFF; box-shadow: 0 14px 34px rgba(31, 58, 120, 0.10);
+}
+.screen span { border-right: 1.5px solid #C6D5EA; border-bottom: 1.5px solid #C6D5EA; }
+.screen span:nth-child(3n) { border-right: 0; }
+.screen span:nth-child(n + 7) { border-bottom: 0; }
+.screen span.on { background: var(--brand-soft); }
+
+/* ---------------------------------------------------------------- 卖点 */
+
+.features {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
+  padding: 0 0 96px;
+}
+.features article {
+  padding: 30px 28px 32px; border-radius: 14px;
+  border: 1.5px solid var(--line); background: #FFF;
+}
+.features h3 {
+  font-size: 18px; font-weight: 700; margin-bottom: 12px;
+  padding-top: 14px; border-top: 2px solid var(--brand); display: inline-block;
+}
+.features p { font-size: 15px; color: var(--body); }
+
+/* ---------------------------------------------------------------- 文档 */
+
+.docs { padding: 0 0 96px; }
+.docs-head { max-width: 46em; margin-bottom: 40px; }
+.docs-head h2 { font-size: 32px; font-weight: 700; letter-spacing: -0.3px; }
+.docs-head p { margin-top: 12px; color: var(--body); font-size: 16px; }
+
+.doc-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px;
+  padding-top: 32px; border-top: 1px solid var(--line);
+}
+.doc-col h4 {
+  font: 600 13px/1 Consolas, monospace; letter-spacing: 2px;
+  color: var(--mute); text-transform: uppercase; margin-bottom: 16px;
+}
+.doc-col a {
+  display: block; padding: 9px 0; font-size: 15px; color: var(--ink);
+  border-bottom: 1px solid #F2F5FA;
+}
+.doc-col a:hover { color: var(--brand); text-decoration: none; }
+
+/* ---------------------------------------------------------------- 演示 */
+
+.showcase {
+  display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 52px;
+  align-items: center; padding: 72px 0 96px;
+  border-top: 1px solid var(--line);
+}
+.showcase h2 { font-size: 30px; font-weight: 700; letter-spacing: -0.3px; }
+.showcase p { margin-top: 14px; color: var(--body); font-size: 16px; }
+.showcase .muted { color: var(--mute); font-size: 14px; }
+
+.players { display: flex; gap: 18px; align-items: flex-end; justify-content: center; }
+.players video {
+  width: 100%; border-radius: 10px; background: #000;
+  border: 2px solid var(--edge);
+}
+.players video.tall { width: 34%; }
+
+/* ---------------------------------------------------------------- 页脚 */
+
+footer {
+  border-top: 1px solid var(--line); background: #FBFCFE;
+}
+.foot-inner {
+  max-width: 1120px; margin: 0 auto; padding: 34px 28px;
+  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  font-size: 14px; color: var(--mute);
+}
+
+/* ---------------------------------------------------------------- 窄屏 */
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; gap: 44px; padding: 52px 0 72px; }
+  .hero h1 { font-size: 40px; }
+  .hero-demo { justify-content: flex-start; }
+  .features { grid-template-columns: 1fr; gap: 16px; padding-bottom: 72px; }
+  .doc-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 28px; }
+  .showcase { grid-template-columns: 1fr; gap: 32px; }
+  .players video { width: 62%; }
+  .players video.tall { width: 30%; }
+}
+
+@media (max-width: 600px) {
+  .topbar { padding: 14px 20px; }
+  .topbar nav { gap: 16px; font-size: 14px; }
+  .topbar nav a:first-child { display: none; }
+  main { padding: 0 20px; }
+  .hero h1 { font-size: 32px; }
+  .lead { font-size: 16px; }
+  .pad { width: 160px; }
+  .screen { width: 196px; }
+  .doc-grid { grid-template-columns: 1fr; }
+  .foot-inner { flex-direction: column; gap: 8px; }
+}
