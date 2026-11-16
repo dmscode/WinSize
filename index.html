@@ -47,8 +47,11 @@
       <div class="link" aria-hidden="true">→</div>
       <div class="screen">
         <span></span><span></span><span></span>
-        <span></span><span class="on"></span><span></span>
         <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <!-- S 对应的是 Center 布局 `20|20|60|60`：一个 60% 的居中窗口，
+             不是"中间那一格"。高亮必须按真实几何画，否则示意图和实际行为对不上。 -->
+        <div class="win60"></div>
       </div>
     </div>
   </section>
@@ -65,7 +68,7 @@
     </article>
     <article>
       <h3>可以被脚本指挥</h3>
-      <p>内置本地 HTTP 接口，AI 或脚本一句话就能摆好一整套桌面。接口只监听本机回环，不联网。</p>
+      <p>内置本地 HTTP 接口，AI 或脚本一句话就能摆好一整套桌面。接口只监听本机回环，不上传任何东西。</p>
     </article>
   </section>
 

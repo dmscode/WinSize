@@ -156,6 +156,13 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
 .screen span:nth-child(3n) { border-right: 0; }
 .screen span:nth-child(n + 7) { border-bottom: 0; }
 .screen span.on { background: var(--brand-soft); }
+/* 居中 60% 的窗口：按 `20sw|20sh|60sw|60sh` 的实际比例画 */
+.screen { position: relative; }
+.win60 {
+  position: absolute; left: 20%; top: 20%; width: 60%; height: 60%;
+  background: rgba(47, 107, 246, 0.13);
+  border: 1.5px solid var(--brand); border-radius: 4px;
+}
 
 /* ---------------------------------------------------------------- 卖点 */
 
