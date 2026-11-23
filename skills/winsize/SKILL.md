@@ -7,12 +7,61 @@ description: 看清并调整 Windows 上的窗口布局。当用户说"把窗口
 
 ## 0. 这个 skill 能做什么
 
-**能做**：列出当前所有窗口（标题、进程、位置、在哪块屏、能不能动），把指定窗口摆到指定位置，
-存/删布局方案，撤销上一次执行。
+| 你想做的事 | 可以直接这样说 | 对应命令 |
+| --- | --- | --- |
+| 看现在开了哪些窗口 | "现在都开了什么窗口" / "Chrome 在哪块屏" | `windows` |
+| 把一个窗口摆到某个位置 | "把 Chrome 放左半屏" / "记事本铺满右边屏幕" | `apply` |
+| 一次摆好几个窗口 | "浏览器在左、编辑器在右、终端铺满下半个屏" | `batch` |
+| 存一套常用布局 | "把这个尺寸存成 LeftHalf" | `save-layout` |
+| 看都有哪些方案 | "都有哪些布局方案" | `layouts` |
+| 撤销刚才的摆放 | "撤销" / "放回去" | `restore` |
+| 改完配置让它生效 | "配置我改好了，重载一下" | `reload` |
+| 置顶 / 取消置顶 | "把 Chrome 置顶" / "取消置顶" | `action --name=pin --hwnd=… --param=on` |
+| 排除 / 取消排除某个窗口 | "以后别动这个窗口" / "恢复它" | `action --name=exclude --hwnd=… --param=on` |
+| 重启或退出程序 | "重启一下 WinSize" / "把 WinSize 关了吧" | `action --name=reboot` / `action --name=quit`（都要 `--commit`） |
+| 看程序现在支持哪些动作 | "你能让 WinSize 做什么" | `actions` |
+
+**现在做不到**（程序里有，但还没有接口）：
+
+| 能力 | 目前只能靠用户 |
+| --- | --- |
+| 绑定窗口 / 唤回 | 按 `1`~`9`、`0` |
+| 辅助线、悬停激活 | 按 `G` / `T` |
+| 隐藏标题栏、右上角置顶 | `LAlt + 右键` 点窗口顶部 |
+| 改配置项（字号、开关、排除表…） | 打开设置页 |
+| 截图 / 看窗口内容 | —— |
 
 **不做**：截图、识别窗口内容、改系统设置、改用户配置、管理进程。
 
 **一句话**：它让 AI 变成一个"会摆窗口的助手"，不是一个"会看屏幕的助手"。
+
+### 指挥示例
+
+**能直接干**（目标具体、窗口可指认）：
+
+| 用户说 | 怎么处理 |
+| --- | --- |
+| "把 Chrome 放左半屏" | `windows --exe=chrome` → `apply --hwnd=… --layout=FullLeft` |
+| "记事本铺满右屏" | 同上，换 `--layout=FullRight` |
+| "浏览器在左、编辑器在右" | `batch` 两条，一次提交 |
+| "把终端压到下面三分之一" | `apply --rect="0|66sh|100sw|34sh"` |
+
+**必须反问**（含糊、没指认窗口、没有可执行的目标）：
+
+| 用户说 | 为什么不能直接做 | 反问什么 |
+| --- | --- | --- |
+| "帮我整理一下桌面" | 不知道摆哪几个窗口、目标是什么 | "要摆哪几个窗口？想怎么分？" |
+| "把窗口弄整齐" | "整齐"不是可执行的位置 | "左右各半，还是指定比例？" |
+| "让它们别挡着" | 谁挡谁、往哪挪都不明确 | "哪几个窗口挡住了？想挪到哪边？" |
+
+反问模板：**"要摆哪几个窗口？想怎么分（左右各半 / 上下 / 指定比例）？"**
+
+**动手前要先说清的边界**：
+
+- 只能摆可见、非最小化的普通窗口；管理员权限窗口可能"完全没动"（`verdict=blocked`），这不是失败重试能解决的。
+- 默认只预演。看到 `verdict` 正常再加 `--commit`，别一上来就落地。
+- 一次最多 50 条；更多要分批。
+- `hwnd=0` 表示"当前前台窗口"，用户说"这个窗口"时通常就是它。
 
 ---
 
@@ -79,6 +128,8 @@ node "<WinSize目录>\cli\winsize.mjs" status
 | `reload` | 让主程序重读 `Config.ini` | 否 |
 | `save-layout` | 存一个布局方案 | 否 |
 | `del-layout` | 删一个布局方案 | 否 |
+| `actions` | 列出程序支持的动作（自省） | 否 |
+| `action` | 执行一个动作，如置顶 / 排除 / 重启（**默认只预演**） | 加 `--commit` 才会 |
 
 ---
 
@@ -153,6 +204,71 @@ node <CLI> reload                    # 用户手改了 Config.ini 之后必须�
 - **撤销只有 1 步**，而且重启 WinSize 后失效。需要长期可回退时，先 `save-layout` 再动。
 - `reload` 只让程序重读配置，不改文件。
 
+### 3.5 `actions` / `action` —— 置顶、排除、重启
+
+`actions` 是**自省**：程序现在认哪些动作、要不要窗口、参数能填什么、给不给外部调。
+
+```bash
+node <CLI> actions
+```
+
+`action` 执行其中一个动作，**默认只预演**，加 `--commit` 才真做：
+
+```bash
+# 置顶（on / off / toggle，不写 param 就是 toggle）
+node <CLI> action --name=pin --hwnd=131072 --param=on
+node <CLI> action --name=pin --hwnd=131072 --param=on --commit
+
+# 排除 / 恢复
+node <CLI> action --name=exclude --hwnd=131072 --param=on --commit
+
+# 重启 / 退出：必须先预演看一眼，再加 --commit
+node <CLI> action --name=reboot              # 预演：会换 token、会断连接
+node <CLI> action --name=reboot --commit
+```
+
+要点：
+
+- **`on` / `off` / `toggle` 的区别很重要**：热键是"切换"，你对同一个窗口连说两次"置顶"
+  就变回原样了。要一个确定的结果，就写 `--param=on` 或 `--param=off`。
+- **重启 / 退出后 token 和端口都会变**（退出还会删掉 `runtime.json`），
+  所以后续调用要重新读 `runtime.json`；`--commit` 之前务必先预演并把后果告诉用户。
+- 有专用接口的动作（`layout` / `applyrect` / `reload`）**不在这里做**，会回 `not-exposed`
+  并告诉你该走哪；`help` / `settings` / `version` 一律不给外部调（会抢用户屏幕或卡住程序）。
+- 排除是"整条规则"级的：规则只有 `进程|类` 两段，**不能只排除同一个程序里的某一个窗口**。
+  被拒时照 `error.format` 说的做，别自己拼规则。
+
+### 3.6 `exclusions` —— 查看和增删排除规则
+
+排除表决定"哪些窗口不参与布局、不能摆"。**整节覆盖 `Config.ini` 的 `[Exclusions]` 很容易写坏**
+（内置规则和顺序会一起变），所以增删单条走这个接口：
+
+```bash
+# 看现有规则：每条现在命中几个窗口，内置规则单独列
+node <CLI> exclusions
+
+# 加一条（默认只预演，返回会命中的窗口，让你先确认范围）
+node <CLI> exclude --rule="C:\Program Files\Google\Chrome\Application\chrome.exe|Chrome_WidgetWin_1"
+node <CLI> exclude --hwnd=131072          # 也可以给窗口，规则按"进程路径|窗口类"推导
+
+# 确认无误再落地
+node <CLI> exclude --hwnd=131072 --commit
+
+# 删一条
+node <CLI> unexclude --rule="C:\x\a.exe|SomeClass"
+node <CLI> unexclude --rule="C:\x\a.exe|SomeClass" --commit
+```
+
+要点：
+
+- 规则只有 `进程|类` 两段。只写进程段表示"这个进程的所有窗口"；带上类名才是"只有这一类"。
+  多写一段会被拒（`bad-rule`）。
+- **同一个程序开了多个同类窗口时，这条规则会一起排掉**。先看预演返回的 `hits` 里的标题，
+  那不是用户想要的范围就问，别自己拼更长的规则——拼不出来，规则只到类这一级。
+- 加规则是幂等的（已在表里返回 `changed:0`）；删不存在的规则回 `not-found`，
+  `options` 里带现有规则。
+- 写进配置后**立刻生效**，不需要再发 `reload`。
+
 ---
 
 ## 4. 布局串语法
@@ -166,6 +282,8 @@ x|y|宽|高[|显示器]
 | `x` `y` | 左上角坐标，相对**目标显示器的工作区**（不含任务栏） |
 | `宽` `高` | 尺寸 |
 | 第 5 段 | 显示器号；省略或 `0` = **跟随鼠标当前所在那块屏** |
+
+> 坐标原点默认是**目标显示器的工作区**；一旦表达式里出现 `vw` / `vh`，原点自动改成**虚拟屏左上角**（只有 `0|0|100vw|100vh` 才是"横跨所有屏"）。
 
 > ⚠️ **多显示器时永远把第 5 段写上。** 省略它等于"听天由命"——鼠标在哪块屏就摆到哪块，
 > 而鼠标位置你控制不了。实测踩过：想摆到主屏右半，结果因为鼠标在小屏，窗口落到了小屏上，
@@ -213,7 +331,10 @@ x|y|宽|高[|显示器]
   "state": "normal",
   "visible": 1,
   "excluded": 0,
-  "operable": 1
+  "operable": 1,
+  "exePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "topmost": 0,
+  "excludedRules": []
 }
 ```
 
@@ -223,9 +344,12 @@ x|y|宽|高[|显示器]
 | `rect` | **窗外框**（含不可见边框） |
 | `visibleRect` | **肉眼看到的边界**。判断"摆好没有"用这个，不是 `rect` |
 | `monitor` | 在哪块屏（从 1 开始） |
-| `state` | `normal` / `maximized` / `minimized` |
+| `state` | `normal` / `maximized` / `minimized` / `hidden`（不可见或被 DWM 隐身） |
 | `operable` | `0` = **不能动**：在用户排除表里、工具窗、系统窗、或 WinSize 自己的窗口 |
 | `excluded` | `1` = 在用户的排除表里（用来向用户解释原因） |
+| `exePath` | 完整路径。**排除规则里写的是这个**，不是 `exe` |
+| `topmost` | `1` = 已置顶。`pin` 是切换语义，动手前先看它 |
+| `excludedRules` | 命中的**用户**规则；空数组 = 没被排除。要解释"为什么不能动"就用它 |
 
 `rect` 与 `visibleRect` 差的是窗口阴影，通常 16×8 像素。**不要把这个差当成"没摆好"**。
 
@@ -243,6 +367,7 @@ x|y|宽|高[|显示器]
 | `blocked` | **完全没动** | 多半是管理员权限窗口（UIPI）。换目标也不行，如实告诉用户 |
 | `maximized` | 窗口正处在最大化 | 已按最大化处理；要精确摆放需用户先还原窗口 |
 | `partial` | 动了，尺寸基本对，只差位置 | 系统限制。把实际值报给用户，别假装成功 |
+| `preview` | **预演**：没执行，所以没有 `actual`/`deviation` | 正常。确认目标后再加 `--commit` |
 
 **`clamped` 与 `blocked` 的区别是"窗口有没有动"**：动了一半 = 被尺寸约束（换更大的目标能成），
 一动没动 = 被拒绝（换目标也没用）。**别把两者都说成"权限问题"**。
@@ -284,6 +409,10 @@ x|y|宽|高[|显示器]
 | `too-many` | 一次超过 50 条 | 拆成两批 |
 | `wrong-method` | HTTP 方法用错 | 看 `format` 里写的正确方法 |
 | `not-found` | 路径不存在 | 检查拼写；可用路径写在 `format` 里 |
+| `not-exposed` | 这个动作不开放给外部调用 | **别换名字重试**；照 `options` 走专用接口，或让用户自己按 |
+| `unknown-action` | 没有这个动作名 | 跑一次 `actions` 看现有名字，`options` 也列了全部 |
+| `needs-hwnd` | 这个动作要指定窗口 | 先 `windows` 拿 `hwnd` 再调 |
+| `action-failed` | 动作执行时出错（窗口刚好关了等） | 重新查窗口再试一次；仍失败就如实报错 |
 | `forbidden` | token 或 Origin 不对 | 确认读的是**当前**的 `runtime.json`（程序重启后 token 会变） |
 | `write-failed` / `registry-failed` | 写配置 / 改注册表失败 | 环境问题（只读目录、被安全软件拦），报给用户 |
 
@@ -327,11 +456,13 @@ status → windows（找 hwnd）→ layouts（看有没有现成方案）
 
 1. **不要把 `runtime.json` 里的 token 贴到任何公开地方**（聊天记录、issue、日志）。
    它等于本机接口的钥匙。
-2. **不要用这些接口改用户配置**。`/api/config` 系列是设置页专用的，改配置请让用户去设置页。
+2. **不要改用户的配置项**（字体、开关、排除表、托盘…）。`/api/config` 系列是设置页专用的。例外一，布局方案可以用 `save-layout` / `del-layout`；例外二，排除表可以用 `/api/exclusions`（CLI 的 `exclude` / `unexclude`）增删单条规则，见 §3.6。这两类都是这个 skill 的正常用途，其它配置项仍然不要动。
 3. **不要循环重试**同一个失败操作。`blocked` / `not-operable` 重试一百次也是同样的结果。
 4. **不要假装成功**。`verdict` 不是 `ok` 就如实说，把 `actual` 报给用户。
 5. **不要在用户没要求时乱动窗口**。这个 skill 是"用户让你摆才摆"，不是"看到窗口就想整理"。
 6. **不要一次 apply 超过 50 条**，会被拒绝（`too-many`）。
+7. **`reboot` / `quit` 必须先预演、先问用户**。它们会断连接、换 token，退出还会删 `runtime.json`。
+   用户没说要重启或退出，就不要调——这不是"顺手清理一下"的操作。
 
 ---
 
@@ -356,8 +487,12 @@ Invoke-RestMethod "http://127.0.0.1:$($rt.port)/api/windows" -Headers $h
 | `/api/apply` | POST | 摆窗口（form: `hwnd` `target` `commit`） |
 | `/api/restore` | POST | 撤销（form: `token`） |
 | `/api/reload` | POST | 重读配置 |
+| `/api/actions` | GET | 动作自省（哪些能调、要不要窗口、参数可选值） |
+| `/api/action` | POST | 执行动作（form: `name` `hwnd` `param` `commit`，默认预演） |
+| `/api/exclusions` | GET / POST / DELETE | 排除表：列表带命中数，增删单条（默认预演） |
 
 `target` 有两种写法：`layout:LeftTop` 或 `rect:0|0|50sw|100sh`。
+`action` 的 `param` 对置顶/排除是 `on` / `off` / `toggle`；`commit=1` 才落地。
 **中文标题走 GET 的 `?title=` 时要做 URL 编码**，这是兜底方案最容易错的地方——能装 Node 就用脚本。
 
 ---

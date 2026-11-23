@@ -1,2 +1,2 @@
-version=6.1.0
-date=2026-11-19
+version=6.2.0
+date=2026-11-23
