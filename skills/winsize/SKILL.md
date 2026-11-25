@@ -238,6 +238,18 @@ node <CLI> action --name=reboot --commit
 - 排除是"整条规则"级的：规则只有 `进程|类` 两段，**不能只排除同一个程序里的某一个窗口**。
   被拒时照 `error.format` 说的做，别自己拼规则。
 
+### 3.5.1 窗口切换（`wswitch` / `wswitchRev`）
+
+`action` 里还有两个"切窗口"的动作，和置顶、排除同一个入口，但**不需要 hwnd，也不需要 commit**：
+
+```bash
+node tools/winsize.mjs action --name=wswitch     # 切到下一个窗口（立即生效）
+node tools/winsize.mjs action --name=wswitchRev  # 反向切回上一个
+```
+
+它们标着 `instant`，响应里 `committed:true`、没有 `preview`。默认只切"同程序 + 同窗口类"的窗口、
+模式为"循环"。想改行为用 `Config.ini` 的 `[Plugins.WindowSwitch]`，或者让用户去设置页「插件 → 窗口切换」改，别自己拼键值；插件被停用时这两个动作会一起消失。
+
 ### 3.6 `exclusions` —— 查看和增删排除规则
 
 排除表决定"哪些窗口不参与布局、不能摆"。**整节覆盖 `Config.ini` 的 `[Exclusions]` 很容易写坏**
