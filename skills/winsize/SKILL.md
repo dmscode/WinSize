@@ -247,8 +247,8 @@ node tools/winsize.mjs action --name=wswitch     # 切到下一个窗口（立�
 node tools/winsize.mjs action --name=wswitchRev  # 反向切回上一个
 ```
 
-它们标着 `instant`，响应里 `committed:true`、没有 `preview`。默认只切"同程序 + 同窗口类"的窗口、
-模式为"循环"。想改行为用 `Config.ini` 的 `[Plugins.WindowSwitch]`，或者让用户去设置页「插件 → 窗口切换」改，别自己拼键值；插件被停用时这两个动作会一起消失。
+它们标着 `instant`，响应里 `committed:true`、没有 `preview`。默认只切"同程序 + 同窗口类"的窗口，
+切换方式为「轮转」；用户自己按的是 `Alt+反引号` 与 `Shift+Alt+反引号`。想改行为用 `Config.ini` 的 `[Plugins.WindowSwitch]`，或者让用户去设置页「插件 → 窗口切换」改，别自己拼键值；插件被停用时这两个动作会一起消失。
 
 ### 3.6 `exclusions` —— 查看和增删排除规则
 
