@@ -427,6 +427,7 @@ x|y|宽|高[|显示器]
 | `action-failed` | 动作执行时出错（窗口刚好关了等） | 重新查窗口再试一次；仍失败就如实报错 |
 | `forbidden` | token 或 Origin 不对 | 确认读的是**当前**的 `runtime.json`（程序重启后 token 会变） |
 | `write-failed` / `registry-failed` | 写配置 / 改注册表失败 | 环境问题（只读目录、被安全软件拦），报给用户 |
+| `internal` | 服务端内部缺陷（例如配置分组没有写入/校验分支） | **改参数没用**，把日志发给作者 |
 
 ---
 
@@ -494,7 +495,7 @@ Invoke-RestMethod "http://127.0.0.1:$($rt.port)/api/windows" -Headers $h
 | 路径 | 方法 | 作用 |
 | --- | --- | --- |
 | `/api/env` | GET | 服务与版本信息 |
-| `/api/windows` | GET | 列窗口（`?exe=` `?title=` `?hwnd=` `?all=1`） |
+| `/api/windows` | GET | 列窗口（`?exe=` `?title=` `?hwnd=` `?all=1`，`all=true` 等价） |
 | `/api/layouts` | GET / POST / DELETE | 布局方案的增删查 |
 | `/api/apply` | POST | 摆窗口（form: `hwnd` `target` `commit`） |
 | `/api/restore` | POST | 撤销（form: `token`） |
