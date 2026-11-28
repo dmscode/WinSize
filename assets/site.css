@@ -188,7 +188,7 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
 .docs-head p { margin-top: 12px; color: var(--body); font-size: 16px; }
 
 .doc-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 28px;
   padding-top: 32px; border-top: 1px solid var(--line);
 }
 .doc-col h4 {
