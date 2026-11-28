@@ -231,6 +231,35 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
   .player .tall { display: block; width: auto; max-width: 100%; max-height: min(68vh, 640px); }
 }
 
+/* ---------------------------------------------------------------- 功能速览 */
+
+.gallery { padding: 72px 0 96px; border-top: 1px solid var(--line); }
+.gallery-head { max-width: 46em; margin-bottom: 36px; }
+.gallery-head h2 { font-size: 30px; font-weight: 700; letter-spacing: -0.3px; }
+.gallery-head p { margin-top: 14px; color: var(--body); font-size: 16px; }
+
+/* 横滚条：13 张竖版图排成网格会把页面拉长一倍，横滑一次看完。
+   scroll-snap 让松手后停在整张图上，不会半张卡在边上。 */
+.strip {
+  display: flex; gap: 18px; overflow-x: auto; padding: 6px 4px 20px;
+  scroll-snap-type: x mandatory; scrollbar-width: thin;
+}
+.strip::-webkit-scrollbar { height: 8px; }
+.strip::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 4px; }
+
+.shot {
+  flex: 0 0 auto; width: 208px; scroll-snap-align: start;
+  border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  background: #FFF; box-shadow: 0 2px 10px rgba(22, 24, 29, 0.05);
+  transition: transform .18s, box-shadow .18s, border-color .18s;
+}
+.shot:hover {
+  text-decoration: none; border-color: var(--brand); transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(47, 107, 246, 0.16);
+}
+.shot img { display: block; width: 100%; height: auto; }
+.shot span { display: block; padding: 10px 12px 12px; font-size: 13px; text-align: center; color: var(--body); }
+
 /* ---------------------------------------------------------------- 页脚 */
 
 footer {
@@ -252,6 +281,9 @@ footer {
   .doc-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 28px; }
   .showcase { grid-template-columns: 1fr; gap: 32px; }
   .player video { max-width: 620px; }
+  /* 横滚条在窄屏上反而更好用，只把卡片收窄一档，一屏露出两张半。 */
+  .gallery { padding: 56px 0 76px; }
+  .shot { width: 176px; }
 }
 
 @media (max-width: 600px) {
